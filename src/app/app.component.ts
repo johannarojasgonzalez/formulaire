@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 @Component( {
@@ -10,16 +10,21 @@ import { Observable } from 'rxjs';
 export class AppComponent implements OnInit {
 
     public myForm: FormGroup;
+    public myForm2: FormGroup;
     @ViewChild( 'confirm' ) public confirm: ElementRef;
+    
+    constructor(private fb: FormBuilder) {
+        
+    }
 
     ngOnInit(): void {
         this.myForm = new FormGroup( {
             username: new FormControl( '', [Validators.required, this.validator1], this.validatorAsync ),
             email: new FormControl( '', this.emailValidator ),
-            password: new FormControl( ''),
-            confirmPassword: new FormControl( '')
+            password: new FormControl( '' ),
+            confirmPassword: new FormControl( '' )
             //password: new FormControl( '', this.notMatchPasseword.bind( this ) ) // il est nécessaire d'uitliser le bind pour que le this.confirm match avec le this de la classe
-        } , this.passwordMatch );
+        }, this.passwordMatch );
 
         // pour initialiser le formulaire (tous les clés sont obligatoires)
         this.myForm.setValue( {
@@ -35,6 +40,27 @@ export class AppComponent implements OnInit {
         } );
 
         this.myForm.get( 'username' ).errors // liste de clés avec les erreurs pour le control username
+
+        this.myForm2 = this.fb.group({
+            username2: ['', Validators.required],
+            email2: [''],
+            hobbies: this.fb.array([]),
+            password2: [''],
+        });
+        
+        this.myForm2.valueChanges.subscribe( value => console.log(value));
+        this.myForm2.statusChanges.subscribe( status => console.log(status));
+
+//        this.myForm2 = new FormGroup( {
+//            username2: new FormControl( '' ),
+//            hobbies: new FormArray( [] ),
+//            email2: new FormControl( '' ),
+//            password2: new FormControl( '' )
+//        } );
+    }
+
+    addHobby(): void {
+        ( <FormArray>this.myForm2.get( 'hobbies' ) ).controls.push( new FormControl( '' ) );
     }
 
     validator1( formControl: FormControl ): { [s: string]: boolean } {
@@ -67,13 +93,13 @@ export class AppComponent implements OnInit {
 
     passwordMatch( group: FormGroup ): { [s: string]: boolean } {
         if ( group.get( 'password' ).value != group.get( 'confirmPassword' ).value ) {
-            console.log("password not match")
+            console.log( "password not match" )
             return { notMatch: true };
         }
     }
 
     submit(): void {
-        console.log( this.myForm );
+        console.log( this.myForm2 );
         //        this.myForm.reset( {
         //            email: 'exemple@exemple.fr'
         //        } );

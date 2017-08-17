@@ -16,15 +16,46 @@
 		</div>
 		<div class="form-group">
 			<label>Confirm password : </label>
-<!-- 			 <input class="form-control" type="password" #confirm /> -->
-			 <input class="form-control" type="password" formControlName='confirmPassword' />
+			<!-- 			 <input class="form-control" type="password" #confirm /> -->
+			<input class="form-control" type="password"
+				formControlName='confirmPassword' />
 		</div>
-<!-- 		<p style="color: red;" -->
-<!-- 			*ngIf="myForm.get('password').hasError('notMatch')">Les mots de -->
-<!-- 			passe ne sont pas identiques</p> -->
-		<p style="color: red;"
- 			*ngIf="myForm.errors && myForm.errors.notMatch">Les mots de 
- 			passe ne sont pas identiques</p>
+		<!-- 		<p style="color: red;" -->
+		<!-- 			*ngIf="myForm.get('password').hasError('notMatch')">Les mots de -->
+		<!-- 			passe ne sont pas identiques</p> -->
+		<p style="color: red;" *ngIf="myForm.errors && myForm.errors.notMatch">Les
+			mots de passe ne sont pas identiques</p>
+		<input class="btn btn-primary" type="submit" />
+	</form>
+</div>
+<hr>
+<div class="container">
+	<form class="col-6 mx-auto" [formGroup]='myForm2' (ngSubmit)="submit()"
+		novalidate>
+		<div class="form-group">
+			<label>Username : </label> <input class="form-control" type="text"
+				formControlName='username2' />
+		</div>
+		<div class="form-group">
+			<label>Email : </label> <input email class="form-control"
+				type="email" formControlName='email2' />
+		</div>
+		<div formArrayName='hobbies'>
+			<label>Hobby:</label>
+			<button class="btn btn-success mr-auto" (click)="addHobby()">Ajouter</button>
+			<div class="form-group"
+				*ngFor="let hobby of myForm2.get('hobbies').controls; let i = index;">
+				<input class="form-control" [formControlName]="i" type="text" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Password : </label> <input class="form-control"
+				type="password" formControlName='password2' />
+		</div>
+		<div class="form-group">
+			<label>Confirm password : </label> <input class="form-control"
+				type="password" #confirm />
+		</div>
 		<input class="btn btn-primary" type="submit" />
 	</form>
 </div>
